@@ -2,10 +2,10 @@
     "swagger": "2.0",
     "info": {
         "title": "My Content Items API",
-        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\n**MyContentItem**\n```\n  { \n    \"UserId\": <number:D2LID>,\n    \"OrgUnitId\": <number:D2LID>, \n    \"ItemId\": <number:D2LID>, \n    \"ItemName\": <string>, \n    \"ItemType\": <ASSOCENTITY_T>, // e.g. D2L.LE.Dropbox.Dropbox \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\n**ItemCount**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ItemCount\": <number>\n  }\n```\n\n##### The following JSON data block from `Calendar` is used:\n\n**ASSOCENTITY_T**\n\nWe use the term ASSOCENTITY_T to stand in for a dictionary of string values indicating associated entities. Note that the list of types is dynamic: installed product components can provide new entity types into this list. Here is a list of known, core types:\n\nAssociated entity type                  |\tService object name\n----------------------------------------|---------------------\n*D2L.LE.Checklist.ChecklistItem*\t      | Checklist item\n*D2L.LE.Content.ContentObject.ModuleCO* |\tContent module\n*D2L.LE.Content.ContentObject.TopicCO*  |\tContent topic\n*D2L.LE.Discussions.DiscussionForum*    |\tDiscussion forum\n*D2L.LE.Discussions.DiscussionTopic*    |\tDiscussion topic\n*D2L.LE.Dropbox.Dropbox*                |\tDropbox\n*D2L.LE.Grades.GradeObject*             |\tGrade item\n*D2L.LE.Quizzing.Quiz*                  |\tQuiz\n*D2L.LE.Survey.Survey*                  |\tSurvey\n",
+        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\n**MyContentItem**\n```\n  { \n    \"UserId\": <number:D2LID>,\n    \"OrgUnitId\": <number:D2LID>, \n    \"ItemId\": <number:D2LID>, \n    \"ItemName\": <string>, \n    \"ItemType\": <ASSOCENTITY_T>, // e.g. D2L.LE.Dropbox.Dropbox \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\n**ItemCount**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ItemCount\": <number>\n  }\n```\n",
         "version": "unstable",
         "x-additional-swagger": [
-            "Valence Auth API"
+            "Valence Framework API"
         ]
     },
     "schemes": [
@@ -1076,19 +1076,8 @@
                     "type": "string"
                 },
                 "ItemType": {
-                    "description": "ASSOCENTITY_T",
-                    "type": "string",
-                    "enum": [
-                        "D2L.LE.Checklist.ChecklistItem",
-                        "D2L.LE.Content.ContentObject.ModuleCO",
-                        "D2L.LE.Content.ContentObject.TopicCO",
-                        "D2L.LE.Discussions.DiscussionForum",
-                        "D2L.LE.Discussions.DiscussionTopic",
-                        "D2L.LE.Dropbox.Dropbox",
-                        "D2L.LE.Grades.GradeObject",
-                        "D2L.LE.Quizzing.Quiz",
-                        "D2L.LE.Survey.Survey"
-                    ]
+                    "description": "ENTITYTYPE_T",
+                    "type": "string"
                 },
                 "ItemUrl": {
                     "description": "URL to content item",
