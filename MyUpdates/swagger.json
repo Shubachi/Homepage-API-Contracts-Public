@@ -1,0 +1,287 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "My Updates API",
+        "description": "##### This API will be responsible for retrieving information about “unread” type of items, e.g. unread discussion posts.\n\nThe following JSON data block is introduced:\n\n**Updates.OrgUnitUpdate**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"UnreadDiscussions\": <number>, // for both students and instructors\n    \"UnreadDropboxFeedback\": <number>, // for students\n    \"UnattemptedQuizzes\": <number>, // for students\n    \"UnreadDropboxSubmissions\": <number>, // for instructors\n    \"UngradedQuizzes\": <number> // for instructors\n  }\n```\n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/lp/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json",
+        "application/json; charset=UTF-8",
+        "application/problem+json; charset=UTF-8"
+    ],
+    "paths": {
+        "/updates/myupdates/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.",
+                "description": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.\n\n**Return.** An `ObjectListPage` of `OrgUnitUpdates` data blocks.\n\nIf the **orgUnitIdsCSV** parameter is omitted, the results will include items for all **active org units** that the user is enrolled in.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "Restricts the result to the specified Org unit IDs.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/OrgUnitUpdatesObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/updates/myupdates/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": 6609,\n      \"UserId\": 10183,\n      \"UnreadDiscussions\": 3,\n      \"UnreadDropboxFeedback\": 3,\n      \"UnattemptedQuizzes\": 1,\n      \"UnreadDropboxSubmissions\": 0,\n      \"UngradedQuizzes\": 0\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided orgUnitIdsCSV is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/updates/myupdates": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve updates for the current user in the specified org unit.",
+                "description": "Retrieve updates for the current user in the specified org unit.\n\n**Return.** A single `OrgUnitUpdates` data block.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/OrgUnitUpdates"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"OrgUnitId\": \"6609\",\n  \"UserId\": \"10183\",\n  \"UnreadDiscussions\": 3,\n  \"UnreadDropboxFeedback\": 0,\n  \"UnattemptedQuizzes\": 0,\n  \"UnreadDropboxSubmissions\": 10,\n  \"UngradedQuizzes\": 13\n}"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "OrgUnitUpdatesObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OrgUnitUpdates"
+                    }
+                }
+            }
+        },
+        "OrgUnitUpdates": {
+            "type": "object",
+            "required": [
+                "OrgUnitId",
+                "UserId",
+                "UnreadDiscussions",
+                "UnreadDropboxFeedback",
+                "UnattemptedQuizzes",
+                "UnreadDropboxSubmissions",
+                "UngradedQuizzes"
+            ],
+            "properties": {
+                "OrgUnitId": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "UserId": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "UnreadDiscussions": {
+                    "description": "# of unread discussion posts",
+                    "type": "number"
+                },
+                "UnreadDropboxFeedback": {
+                    "description": "# of unread dropbox feedback",
+                    "type": "number"
+                },
+                "UnattemptedQuizzes": {
+                    "description": "# of unattempted quizzes",
+                    "type": "number"
+                },
+                "UnreadDropboxSubmissions": {
+                    "description": "# of unread dropbox submissions",
+                    "type": "number"
+                },
+                "UngradedQuizzes": {
+                    "description": "# of ungraded quizzes",
+                    "type": "number"
+                }
+            }
+        },
+        "ErrorResponseSchema": {
+            "type": "object",
+            "required": [
+                "type",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "type": {
+                    "description": "A URI that uniquely identifies the error type.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "A short human-readable description of the error.",
+                    "type": "number",
+                    "enum": [
+                        400,
+                        403,
+                        404
+                    ]
+                },
+                "title": {
+                    "description": "A number that matches the HTTP status code of the response.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
