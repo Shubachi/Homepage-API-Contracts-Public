@@ -12,7 +12,7 @@
         "http",
         "https"
     ],
-    "basePath": "/d2l/api/lp/{version}",
+    "basePath": "/d2l/api/le/{version}",
     "produces": [
         "application/json",
         "application/problem+json",
