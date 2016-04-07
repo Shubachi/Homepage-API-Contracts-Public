@@ -26,7 +26,7 @@
                     "GET"
                 ],
                 "summary": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.",
-                "description": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.\n\n**Return.** An `ObjectListPage` of `OrgUnitUpdates` data blocks.\n\nIf the **orgUnitIdsCSV** parameter is omitted, the results will include items for all **active org units** that the user is enrolled in.\n",
+                "description": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.\n\n**Return.** An `ObjectListPage` of `OrgUnitUpdates` data blocks.\n\nIf the **orgUnitIdsCSV** parameter is omitted, the results will include items for all **active org units** that the user is enrolled in.\n\n**Updates.OrgUnitUpdate**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"UnreadDiscussions\": <number>, // for both students and instructors\n    \"UnreadDropboxFeedback\": <number>, // for students\n    \"UnattemptedQuizzes\": <number>, // for students\n    \"UnreadDropboxSubmissions\": <number>, // for instructors\n    \"UngradedQuizzes\": <number> // for instructors\n  }\n```\n",
                 "parameters": [
                     {
                         "name": "authorization",
@@ -76,7 +76,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided orgUnitIdsCSV is invalid.",
+                        "description": "Bad request. Provided *orgUnitIdsCSV* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -116,7 +116,7 @@
                     "GET"
                 ],
                 "summary": "Retrieve updates for the current user in the specified org unit.",
-                "description": "Retrieve updates for the current user in the specified org unit.\n\n**Return.** A single `OrgUnitUpdates` data block.\n",
+                "description": "Retrieve updates for the current user in the specified org unit.\n\n**Return.** A single `OrgUnitUpdates` data block.\n\n**Updates.OrgUnitUpdate**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"UnreadDiscussions\": <number>, // for both students and instructors\n    \"UnreadDropboxFeedback\": <number>, // for students\n    \"UnattemptedQuizzes\": <number>, // for students\n    \"UnreadDropboxSubmissions\": <number>, // for instructors\n    \"UngradedQuizzes\": <number> // for instructors\n  }\n```\n",
                 "parameters": [
                     {
                         "name": "authorization",
