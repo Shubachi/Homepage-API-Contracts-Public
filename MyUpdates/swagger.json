@@ -72,7 +72,7 @@
                             "$ref": "#/definitions/OrgUnitUpdatesObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/updates/myupdates/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": 6609,\n      \"UserId\": 10183,\n      \"UnreadDiscussions\": 3,\n      \"UnreadDropboxFeedback\": 3,\n      \"UnattemptedQuizzes\": 1,\n      \"UnreadDropboxSubmissions\": 0,\n      \"UngradedQuizzes\": 0\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/updates/myupdates/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"UnreadDiscussions\": 3,\n      \"UnreadDropboxFeedback\": 3,\n      \"UnattemptedQuizzes\": 1,\n      \"UnreadDropboxSubmissions\": 0,\n      \"UngradedQuizzes\": 0\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -228,11 +228,11 @@
             "properties": {
                 "OrgUnitId": {
                     "description": "number:D2LID",
-                    "type": "number"
+                    "type": "string"
                 },
                 "UserId": {
                     "description": "number:D2LID",
-                    "type": "number"
+                    "type": "string"
                 },
                 "UnreadDiscussions": {
                     "description": "# of unread discussion posts",
