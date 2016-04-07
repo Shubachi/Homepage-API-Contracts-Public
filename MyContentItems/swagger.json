@@ -102,7 +102,7 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": 10183,\n      \"OrgUnitId\": 6609,\n      \"ItemId\": 10001,\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -219,7 +219,7 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/6609/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": 10183,\n      \"OrgUnitId\": 6609,\n      \"ItemId\": 10001,\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/6609/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -601,7 +601,7 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": 10183,\n      \"OrgUnitId\": 6609,\n      \"ItemId\": 10001,\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -718,7 +718,7 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": 10183,\n      \"OrgUnitId\": 6609,\n      \"ItemId\": 10001,\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -1061,15 +1061,15 @@
             "properties": {
                 "UserId": {
                     "description": "number:D2LId",
-                    "type": "number"
+                    "type": "string"
                 },
                 "OrgUnitId": {
                     "description": "number:D2LId",
-                    "type": "number"
+                    "type": "string"
                 },
                 "ItemId": {
                     "description": "number:D2LId",
-                    "type": "number"
+                    "type": "string"
                 },
                 "ItemName": {
                     "description": "Name of the content topic",
@@ -1152,11 +1152,11 @@
             "properties": {
                 "OrgUnitId": {
                     "description": "number:D2LID",
-                    "type": "number"
+                    "type": "string"
                 },
                 "UserId": {
                     "description": "number:D2LID",
-                    "type": "number"
+                    "type": "string"
                 },
                 "ItemCount": {
                     "type": "number"
