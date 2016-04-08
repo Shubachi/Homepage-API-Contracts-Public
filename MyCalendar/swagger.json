@@ -1,0 +1,956 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Calendar API",
+        "description": "##### To allow filtering calendar events to unassociated items only, we’ll introduce a new enum type for specifying the association type:\n\n**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n\n##### To allow filtering calendar events to reminder items only, we’ll introduce a new enum type for specifying the event type:\n\n**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n\n##### The following JSON data block is introduced:\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/le/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json",
+        "application/json; charset=UTF-8",
+        "application/problem+json; charset=UTF-8"
+    ],
+    "paths": {
+        "/calendar/events/myEvents/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve all calendar events for the calling user, within all the org units they are actively enrolled in.",
+                "description": "***Important Note:*** *This API, as currently designed, does not return the associated item Start/End/Due date, or completion status. This may change in a future update to this API.*\n\nRetrieve all calendar events for the calling user, within all the org units they are actively enrolled in.\n\n**Return.** A `ObjectListPage` containing the resulting `Calendar.EventDataInfo` JSON data blocks.\n\n**NOTE:** If **association** = **Any** or **AssociatedOnly**, the associated items returned by this route include the `AssociatedEntityInfo` structure:\n\nCalendar.**AssociatedEntityInfo**\n```\n  {\n    \"AssociatedEntityType\": <string:ASSOCENTITY_T>,\n    \"AssociatedEntityId\": <number:D2LID>,\n    \"Link\": <string>,\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer"
+                    },
+                    {
+                        "name": "association",
+                        "in": "query",
+                        "description": "**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "eventType",
+                        "in": "query",
+                        "description": "**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            6
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of Org unit IDs.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/EventDataInfoObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/myEvents/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": false,\n      \"AssociatedEntity\": null,\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV*, *associated*, or *eventType* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/calendar/events/myEvents/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve all the calendar events for the calling user, within the provided org unit context.",
+                "description": "***Important Note:*** *This API, as currently designed, does not return the associated item Start/End/Due date, or completion status. This may change in a future update to this API.*\n\nRetrieve all the calendar events for the calling user, within the provided org unit context.\n\n**Return.** A `ObjectListPage` containing the resulting `Calendar.EventDataInfo` JSON data blocks.\n\n**NOTE:** If **association** = **Any** or **AssociatedOnly**, the associated items returned by this route include the `AssociatedEntityInfo` structure:\n\nCalendar.**AssociatedEntityInfo**\n```\n  {\n    \"AssociatedEntityType\": <string:ASSOCENTITY_T>,\n    \"AssociatedEntityId\": <number:D2LID>,\n    \"Link\": <string>,\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer"
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org Unit Id",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "association",
+                        "in": "query",
+                        "description": "**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "eventType",
+                        "in": "query",
+                        "description": "**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            6
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/EventDataInfoObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/6609/myEvents/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": true,\n      \"AssociatedEntity\": {\n        \"AssociatedEntityType\": \"D2L.LE.Quizzing.Quiz\",\n        \"AssociatedEntityId\": 95774,\n        \"Link\": \"http://instance/link-to-content\"\n      },\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *associated*, or *eventType* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/calendar/events/myEvents/itemCounts/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve the count of all calendar events for the calling user, within all the org units they are actively enrolled in.",
+                "description": "Retrieve the count of all calendar events for the calling user, within all the org units they are actively enrolled in.\n\n**Return.** A `ObjectListPage` of `Calendar.EventCount` blocks, each representing the event count for one org unit.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer"
+                    },
+                    {
+                        "name": "association",
+                        "in": "query",
+                        "description": "**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "eventType",
+                        "in": "query",
+                        "description": "**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            6
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of Org unit IDs.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/EventCountObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/6609/myEvents/itemCounts/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"121213\",\n      \"UserId\": \"10183\",\n      \"EventCount\": 10\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV*, *associated*, or *eventType* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/calendar/events/myEvents/itemCount": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve all the calendar events for the calling user, within the provided org unit context.",
+                "description": "Retrieve all the calendar events for the calling user, within the provided org unit context.\n\n**Return.** A single `Calendar.EventCount` block.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer"
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org Unit Id",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "association",
+                        "in": "query",
+                        "description": "**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "eventType",
+                        "in": "query",
+                        "description": "**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            6
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/EventCount"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"OrgUnitId\": \"121213\",\n  \"UserId\": \"10183\",\n  \"EventCount\": 10\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *associated*, or *eventType* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "EventDataInfoObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/EventDataInfo"
+                    }
+                }
+            }
+        },
+        "EventDataInfo": {
+            "type": "object",
+            "required": [
+                "CalendarEventId",
+                "OrgUnitId",
+                "Title",
+                "Description",
+                "StartDateTime",
+                "EndDateTime",
+                "IsAllDayEvent",
+                "StartDay",
+                "EndDay",
+                "GroupId",
+                "IsRecurring",
+                "RecurrenceInfo",
+                "LocationId",
+                "LocationName",
+                "OrgUnitName",
+                "OrgUnitCode",
+                "IsAssociatedWithEntity",
+                "AssociatedEntity",
+                "HasVisibilityRestrictions",
+                "VisibilityRestrictions"
+            ],
+            "properties": {
+                "CalendarEventId": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "OrgUnitId": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "Title": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "StartDateTime": {
+                    "description": "UTCDateTime",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                },
+                "EndDateTime": {
+                    "description": "UTCDateTime",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                },
+                "IsAllDayEvent": {
+                    "type": "boolean"
+                },
+                "StartDay": {
+                    "description": "LocalDateTime",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"
+                },
+                "EndDay": {
+                    "description": "LocalDateTime",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"
+                },
+                "GroupId": {
+                    "description": "number:D2LID",
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "IsRecurring": {
+                    "type": "boolean"
+                },
+                "RecurrenceInfo": {
+                    "$ref": "#/definitions/RecurrenceInfo"
+                },
+                "LocationId": {
+                    "description": "number:D2LID",
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "LocationName": {
+                    "type": "string"
+                },
+                "OrgUnitName": {
+                    "type": "string"
+                },
+                "OrgUnitCode": {
+                    "type": "string"
+                },
+                "IsAssociatedWithEntity": {
+                    "type": "boolean"
+                },
+                "AssociatedEntity": {
+                    "$ref": "#/definitions/AssociatedEntity"
+                },
+                "HasVisibilityRestrictions": {
+                    "type": "boolean"
+                },
+                "VisibilityRestrictions": {
+                    "$ref": "#/definitions/VisibilityInfo"
+                }
+            }
+        },
+        "RecurrenceInfo": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "required": [
+                "RepeatType",
+                "RepeatEvery",
+                "RepeatOnInfo",
+                "RepeatUntilDate"
+            ],
+            "properties": {
+                "RepeatType": {
+                    "description": "Recurrence frequency unit type (recurrence expressed in days, weeks, months, years, or no recurrence). \nNone    1\nDaily   2\nWeekly  3\nMonthly 4\nYearly  5\n",
+                    "type": "number",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
+                "RepeatEvery": {
+                    "description": "How many of the units make up the recurrence cycle (every two days, every four weeks, and so on).",
+                    "type": "number"
+                },
+                "RepeatOnInfo": {
+                    "description": "Occurrence template to indicate which days in the week a repeating event occurs on. This property applies only with weekly RepeatType events.",
+                    "type": "object",
+                    "required": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ],
+                    "properties": {
+                        "Monday": {
+                            "type": "boolean"
+                        },
+                        "Tuesday": {
+                            "type": "boolean"
+                        },
+                        "Wednesday": {
+                            "type": "boolean"
+                        },
+                        "Thursday": {
+                            "type": "boolean"
+                        },
+                        "Friday": {
+                            "type": "boolean"
+                        },
+                        "Saturday": {
+                            "type": "boolean"
+                        },
+                        "Sunday": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "RepeatUntilDate": {
+                    "description": "UTCDateTime | A date and time after which this event will no longer recur.",
+                    "type": "string",
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                }
+            }
+        },
+        "AssociatedEntity": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "required": [
+                "AssociatedEntityType",
+                "AssociatedEntityId",
+                "Link"
+            ],
+            "properties": {
+                "AssociatedEntityType": {
+                    "type": "string",
+                    "enum": [
+                        "D2L.LE.Checklist.ChecklistItem",
+                        "D2L.LE.Content.ContentObject.ModuleCO",
+                        "D2L.LE.Content.ContentObject.TopicCO",
+                        "D2L.LE.Discussions.DiscussionForum",
+                        "D2L.LE.Discussions.DiscussionTopic",
+                        "D2L.LE.Dropbox.Dropbox",
+                        "D2L.LE.Grades.GradeObject",
+                        "D2L.LE.Quizzing.Quiz",
+                        "D2L.LE.Survey.Survey"
+                    ]
+                },
+                "AssociatedEntityId": {
+                    "description": "number|D2LID",
+                    "type": "number"
+                },
+                "Link": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            }
+        },
+        "VisibilityInfo": {
+            "type": "object",
+            "required": [
+                "Type",
+                "Range",
+                "HiddenRangeUnitType",
+                "StartDate",
+                "EndDate"
+            ],
+            "properties": {
+                "Type": {
+                    "description": "Type of visibility status, expressed by a VISIBILITY_T enumeration value. Depending on this property’s value, the remainder of the properties in this structure get used in different ways.\n\nVisible (1) means that the event is always visible.\n\nHiddenUntil (2) means that the event is hidden until some time before the StartDate, as determined by the Range and HiddenRangeUnitType. Thus, with a range of “four hours”, the event is invisible until four hours before the event’s start date; after that point, the event will be visible.\n\nHiddenStarting (3) means that the event is hidden some time after the EndDate, as determined by the Range and HiddenRangeUnitType. Thus, with a range of “two days”, the event is visible until two days after the event’s end date; after that point, the event will be hidden.\n\nVisibleBetween (4) means that the event is visible only between the StartDate and EndDate property times; outside that time range, the event remains hidden.\n\nHidden (5) means that the event is always hidden.\n",
+                    "type": "number",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
+                "Range": {
+                    "description": "This value expresses the number of range units the visibility state should persist (for example, a value of 2 with a HiddenRangeUnitType value of 2 would mean two hours).",
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "HiddenRangeUnitType": {
+                    "description": "Value indicating the basic time unit used to express a range of visibilty restriction time.\nDays    1\nHours   2\nMinutes 3\n",
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "StartDate": {
+                    "description": "UTCDateTime\nUsed by HiddenUntil and VisibleBetween restriction types; this value gets ignored in HiddenStarting, Visible, and Hidden types.\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                },
+                "EndDate": {
+                    "description": "UTCDateTime\nUsed by HiddenStarting and VisibleBetween restriction types; this value gets ignored in HiddenUntil, Visible, and Hidden types.\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                }
+            }
+        },
+        "EventCountObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/EventCount"
+                    }
+                }
+            }
+        },
+        "EventCount": {
+            "type": "object",
+            "required": [
+                "OrgUnitId",
+                "UserId",
+                "EventCount"
+            ],
+            "properties": {
+                "OrgUnitId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "UserId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "EventCount": {
+                    "type": "number"
+                }
+            }
+        },
+        "ErrorResponseSchema": {
+            "type": "object",
+            "required": [
+                "type",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "type": {
+                    "description": "A URI that uniquely identifies the error type.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "A short human-readable description of the error.",
+                    "type": "number",
+                    "enum": [
+                        400,
+                        403,
+                        404
+                    ]
+                },
+                "title": {
+                    "description": "A number that matches the HTTP status code of the response.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
