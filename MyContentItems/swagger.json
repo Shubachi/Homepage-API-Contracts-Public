@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "My Content Items API",
-        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\n**MyContentItem**\n```\n  { \n    \"UserId\": <number:D2LID>,\n    \"OrgUnitId\": <number:D2LID>, \n    \"ItemId\": <number:D2LID>, \n    \"ItemName\": <string>, \n    \"ItemType\": <ASSOCENTITY_T>, // e.g. D2L.LE.Dropbox.Dropbox \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\n**ItemCount**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ItemCount\": <number>\n  }\n```\n",
+        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\nContent.**MyContentItem**\n```\n  { \n    \"UserId\": <number:D2LID>,\n    \"OrgUnitId\": <number:D2LID>, \n    \"ItemId\": <number:D2LID>, \n    \"ItemName\": <string>, \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\nContent.**ItemCount**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ItemCount\": <number>\n  }\n```\n",
         "version": "unstable",
         "x-additional-swagger": [
             "Valence Framework API"
@@ -102,27 +102,11 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided orgUnitIdsCSV or completion is invalid.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -219,11 +203,11 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/6609/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/6609/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided completion is invalid.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -255,7 +239,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -355,27 +339,11 @@
                             "$ref": "#/definitions/ItemCountObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"next-string\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/itemCounts/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided orgUnitIdsCSV or completion is invalid.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -469,7 +437,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided completion is invalid.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -501,7 +469,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -601,27 +569,11 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/myItems/due/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided orgUnitIdsCSV or completion is invalid.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -718,11 +670,11 @@
                             "$ref": "#/definitions/MyContentItemObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/route/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemType\": \"D2L.LE.Content.ContentObject.TopicCO\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/apie/le/unstable/6609/myItems/due/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided completion is invalid.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -754,7 +706,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -854,27 +806,11 @@
                             "$ref": "#/definitions/ItemCountObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"next-string\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/itemCounts/due/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided orgUnitIdsCSV or completion is invalid.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -968,7 +904,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request. Provided start date occurs after end date, or provided completion is invalid.",
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -1000,7 +936,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -1051,7 +987,6 @@
                 "OrgUnitId",
                 "ItemId",
                 "ItemName",
-                "ItemType",
                 "ItemUrl",
                 "StartDate",
                 "EndDate",
@@ -1073,10 +1008,6 @@
                 },
                 "ItemName": {
                     "description": "Name of the content topic",
-                    "type": "string"
-                },
-                "ItemType": {
-                    "description": "ENTITYTYPE_T",
                     "type": "string"
                 },
                 "ItemUrl": {
