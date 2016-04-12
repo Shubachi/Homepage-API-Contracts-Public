@@ -53,8 +53,8 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "List of Org unit IDs.",
-                        "required": false,
+                        "description": "List of org unit IDs.",
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -143,7 +143,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit ID",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "string",
                         "pattern": "^[1-9]{1}[0-9]*"
@@ -223,7 +223,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -290,8 +290,8 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "List of Org unit IDs.",
-                        "required": false,
+                        "description": "List of org unit IDs.",
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -380,7 +380,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit ID",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "string",
                         "pattern": "^[1-9]{1}[0-9]*"
@@ -453,7 +453,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -520,8 +520,8 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "List of Org unit IDs.",
-                        "required": false,
+                        "description": "List of org unit IDs.",
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -610,7 +610,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit ID",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "string",
                         "pattern": "^[1-9]{1}[0-9]*"
@@ -690,7 +690,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -758,7 +758,7 @@
                         "name": "orgUnitIdsCSV",
                         "in": "query",
                         "description": "List of Org unit IDs.",
-                        "required": false,
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -847,7 +847,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit ID",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "string",
                         "pattern": "^[1-9]{1}[0-9]*"
@@ -920,7 +920,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
