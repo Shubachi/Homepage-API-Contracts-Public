@@ -66,7 +66,7 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "List of Org unit IDs.",
+                        "description": "List of org unit IDs.",
                         "required": false,
                         "type": "array",
                         "items": {
@@ -133,22 +133,6 @@
                         "schema": {
                             "$ref": "#/definitions/ErrorResponseSchema"
                         }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
                     }
                 }
             }
@@ -172,7 +156,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit Id",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "number"
                     },
@@ -264,7 +248,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -280,7 +264,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -344,7 +328,7 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "List of Org unit IDs.",
+                        "description": "List of org unit IDs.",
                         "required": false,
                         "type": "array",
                         "items": {
@@ -411,22 +395,6 @@
                         "schema": {
                             "$ref": "#/definitions/ErrorResponseSchema"
                         }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
                     }
                 }
             }
@@ -450,7 +418,7 @@
                     {
                         "name": "orgUnitId",
                         "in": "path",
-                        "description": "Org Unit Id",
+                        "description": "Org unit ID",
                         "required": true,
                         "type": "number"
                     },
@@ -542,7 +510,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -558,7 +526,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
