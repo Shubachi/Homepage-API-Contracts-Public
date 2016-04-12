@@ -67,7 +67,7 @@
                         "name": "orgUnitIdsCSV",
                         "in": "query",
                         "description": "List of org unit IDs.",
-                        "required": false,
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -115,7 +115,7 @@
                             "$ref": "#/definitions/EventDataInfoObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/myEvents/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": false,\n      \"AssociatedEntity\": null,\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/myEvents/?orgUnitIdsCSV=121213&startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": false,\n      \"AssociatedEntity\": null,\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -228,7 +228,7 @@
                             "$ref": "#/definitions/EventDataInfoObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/6609/myEvents/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": true,\n      \"AssociatedEntity\": {\n        \"AssociatedEntityType\": \"D2L.LE.Quizzing.Quiz\",\n        \"AssociatedEntityId\": 95774,\n        \"Link\": \"http://instance/link-to-content\"\n      },\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/121213/myEvents/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"CalendarEventId\": 2,\n      \"OrgUnitId\": 121213,\n      \"Title\": \"My Event\",\n      \"Description\": \"\",\n      \"IsAllDayEvent\": false,\n      \"GroupId\": null,\n      \"StartDateTime\": \"2016-03-10T16:30:00.000Z\",\n      \"EndDateTime\": \"2016-03-12T17:00:00.000Z\",\n      \"IsRecurring\": true,\n      \"RecurrenceInfo\": {\n        \"RepeatType\": 3,\n        \"RepeatEvery\": 1,\n        \"RepeatOnInfo\": {\n          \"Monday\": false,\n          \"Tuesday\": true,\n          \"Wednesday\": false,\n          \"Thursday\": true,\n          \"Friday\": false,\n          \"Saturday\": false,\n          \"Sunday\": false\n        },\n        \"RepeatUntilDate\": \"2016-04-07T04:00:00.000Z\"\n      },\n      \"StartDay\": null,\n      \"EndDay\": null,\n      \"LocationId\": null,\n      \"LocationName\": \"My Location\",\n      \"OrgUnitName\": \"Accounting Information Systems\",\n      \"OrgUnitCode\": \"AFM341\",\n      \"IsAssociatedWithEntity\": true,\n      \"AssociatedEntity\": {\n        \"AssociatedEntityType\": \"D2L.LE.Quizzing.Quiz\",\n        \"AssociatedEntityId\": 95774,\n        \"Link\": \"http://instance/link-to-content\"\n      },\n      \"HasVisibilityRestrictions\": false,\n      \"VisibilityRestrictions\": {\n        \"Type\": 1,\n        \"Range\": null,\n        \"HiddenRangeUnitType\": null,\n        \"StartDate\": null,\n        \"EndDate\": null\n      }\n    }\n  ]\n}"
                         }
                     },
                     "400": {
@@ -329,7 +329,7 @@
                         "name": "orgUnitIdsCSV",
                         "in": "query",
                         "description": "List of org unit IDs.",
-                        "required": false,
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -377,7 +377,7 @@
                             "$ref": "#/definitions/EventCountObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/6609/myEvents/itemCounts/?startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"121213\",\n      \"UserId\": \"10183\",\n      \"EventCount\": 10\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/6609/myEvents/itemCounts/?orgUnitIdsCSV=121213&startDateTime=2016-03-09T16:30:00.000Z&endDateTime=2016-03-11T16:30:00.000Z&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"121213\",\n      \"UserId\": \"10183\",\n      \"EventCount\": 10\n    }\n  ]\n}"
                         }
                     },
                     "400": {
