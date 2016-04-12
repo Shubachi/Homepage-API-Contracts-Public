@@ -26,7 +26,7 @@
                     "GET"
                 ],
                 "summary": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.",
-                "description": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.\n\n**Return.** An `ObjectListPage` of `OrgUnitUpdates` data blocks.\n\nIf the **orgUnitIdsCSV** parameter is omitted, the results will include items for all **active org units** that the user is enrolled in.\n\n**Updates.OrgUnitUpdate**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"UnreadDiscussions\": <number>, // for both students and instructors\n    \"UnreadDropboxFeedback\": <number>, // for students\n    \"UnattemptedQuizzes\": <number>, // for students\n    \"UnreadDropboxSubmissions\": <number>, // for instructors\n    \"UngradedQuizzes\": <number> // for instructors\n  }\n```\n",
+                "description": "Retrieve a list of updates for the current user across all org units in which the user is enrolled.\n\n**Return.** An `ObjectListPage` of `OrgUnitUpdates` data blocks.\n\n**Updates.OrgUnitUpdate**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"UnreadDiscussions\": <number>, // for both students and instructors\n    \"UnreadDropboxFeedback\": <number>, // for students\n    \"UnattemptedQuizzes\": <number>, // for students\n    \"UnreadDropboxSubmissions\": <number>, // for instructors\n    \"UngradedQuizzes\": <number> // for instructors\n  }\n```\n",
                 "parameters": [
                     {
                         "name": "authorization",
@@ -39,8 +39,8 @@
                     {
                         "name": "orgUnitIdsCSV",
                         "in": "query",
-                        "description": "Restricts the result to the specified Org unit IDs.",
-                        "required": false,
+                        "description": "Restricts the result to the specified org unit IDs.",
+                        "required": true,
                         "type": "array",
                         "items": {
                             "type": "number"
@@ -72,27 +72,11 @@
                             "$ref": "#/definitions/OrgUnitUpdatesObjectListPage"
                         },
                         "examples": {
-                            "application/json": "{\n  \"Next\": \"http://instance/updates/myupdates/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"UnreadDiscussions\": 3,\n      \"UnreadDropboxFeedback\": 3,\n      \"UnattemptedQuizzes\": 1,\n      \"UnreadDropboxSubmissions\": 0,\n      \"UngradedQuizzes\": 0\n    }\n  ]\n}"
+                            "application/json": "{\n  \"Next\": \"http://instance/updates/myupdates/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"UnreadDiscussions\": 3,\n      \"UnreadDropboxFeedback\": 3,\n      \"UnattemptedQuizzes\": 1,\n      \"UnreadDropboxSubmissions\": 0,\n      \"UngradedQuizzes\": 0\n    }\n  ]\n}"
                         }
                     },
                     "400": {
                         "description": "Bad request. Provided *orgUnitIdsCSV* is invalid.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -155,7 +139,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden. No permission to access specified Org unit.",
+                        "description": "Forbidden. No permission to access specified org unit.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
@@ -171,7 +155,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Feature toggle is not enabled for this route.",
+                        "description": "Not found. Specified org unit does not exist.",
                         "headers": {
                             "content-type": {
                                 "type": "string",
