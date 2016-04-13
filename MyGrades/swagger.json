@@ -1,0 +1,298 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "My Grades API",
+        "description": "#### The Grades API provides a route to retrieve the user’s final grade in a course.\n\n#### The following JSON data block is updated:\n\nGrade.**GradeValue**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,  // New field\n    \"UserId\": <number:D2LID>,  // New field\n    \"PointsNumerator\": <number>|null,\n    \"PointsDenominator\": <number>|null,\n    \"WeightedDenominator\": <number>|null,\n    \"WeightedNumerator\": <number>|null,\n    \"DisplayedGrade\": <string>,\n    \"GradeObjectIdentifier\": <string:D2LID>,\n    \"GradeObjectName\": <string>,\n    \"GradeObjectType\": <number:GRADEOBJ_T>,\n    \"GradeObjectTypeName\": <string>|null,\n    \"Comments\": <composite:RichText>,  // Added with LE v1.13 API\n    \"PrivateComments\": <composite:RichText>  // Added with LE v1.13 API\n  }\n```\n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/le/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json",
+        "application/json; charset=UTF-8",
+        "application/problem+json; charset=UTF-8"
+    ],
+    "paths": {
+        "/grades/final/values/myGradeValues/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the final grade values for the calling user within all the org units they are actively enrolled in.",
+                "description": "Retrieves the final grade values for the calling user within all the org units they are actively enrolled in.\n\n**Return.** An `ObjectListPage` of `Grade.GradeValue` blocks, each representing the final grade for one org unit.\n\nGrade.**GradeValue**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"PointsNumerator\": <number>|null,\n    \"PointsDenominator\": <number>|null,\n    \"WeightedDenominator\": <number>|null,\n    \"WeightedNumerator\": <number>|null,\n    \"DisplayedGrade\": <string>,\n    \"GradeObjectIdentifier\": <string:D2LID>,\n    \"GradeObjectName\": <string>,\n    \"GradeObjectType\": <number:GRADEOBJ_T>,\n    \"GradeObjectTypeName\": <string>|null,\n    \"Comments\": <composite:RichText>,  // Added with LE v1.13 API\n    \"PrivateComments\": <composite:RichText>  // Added with LE v1.13 API\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of org unit IDs.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/GradeValueObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/grades/vinal/values/myGradeValues/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"121213\",\n      \"PointsNumerator\": 12,\n      \"PointsDenominator\": 20,\n      \"WeightedNumerator\": null,\n      \"WeightedDenominator\": null,\n      \"GradeObjectIdentifier\": \"53\",\n      \"GradeObjectName\": \"Final Adjusted Grade\",\n      \"GradeObjectType\": 8,\n      \"GradeObjectTypeName\": null,\n      \"DisplayedGrade\": \"60 %\",\n      \"Comments\": {\n        \"Text\": \"\",\n        \"Html\": \"<p>Html Comments</p>\"\n      },\n      \"PrivateComments\": {\n        \"Text\": \"Text Private Comments\",\n        \"Html\": \"\"\n      }\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided *orgUnitIdsCSV* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/grades/final/values/myGradeValue": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve the final grade value for the current user context.",
+                "description": "Retrieve the final grade value for the current user context.\n\n**Return.** This action returns a `Grade.GradeValue` JSON block containing the final grade value for the current user context.\n\nGrade.**GradeValue**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"PointsNumerator\": <number>|null,\n    \"PointsDenominator\": <number>|null,\n    \"WeightedDenominator\": <number>|null,\n    \"WeightedNumerator\": <number>|null,\n    \"DisplayedGrade\": <string>,\n    \"GradeObjectIdentifier\": <string:D2LID>,\n    \"GradeObjectName\": <string>,\n    \"GradeObjectType\": <number:GRADEOBJ_T>,\n    \"GradeObjectTypeName\": <string>|null,\n    \"Comments\": <composite:RichText>,  // Added with LE v1.13 API\n    \"PrivateComments\": <composite:RichText>  // Added with LE v1.13 API\n  }\n```\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/GradeValue"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"OrgUnitId\": \"6609\",\n  \"UserId\": \"121213\",\n  \"PointsNumerator\": 12,\n  \"PointsDenominator\": 20,\n  \"WeightedNumerator\": null,\n  \"WeightedDenominator\": null,\n  \"GradeObjectIdentifier\": \"53\",\n  \"GradeObjectName\": \"Final Adjusted Grade\",\n  \"GradeObjectType\": 8,\n  \"GradeObjectTypeName\": null,\n  \"DisplayedGrade\": \"60 %\",\n  \"Comments\": {\n    \"Text\": \"Text Comments\",\n    \"Html\": \"\"\n  },\n  \"PrivateComments\": {\n    \"Text\": \"\",\n    \"Html\": \"<p>Html Private Comments</p>\"\n  }\n}"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. Current user context has no permission to see grade values."
+                    },
+                    "404": {
+                        "description": "Not Found. No final grade found for current user in org unit, or no org unit found."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "GradeValueObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GradeValue"
+                    }
+                }
+            }
+        },
+        "GradeValue": {
+            "type": "object",
+            "required": [
+                "OrgUnitId",
+                "UserId",
+                "PointsNumerator",
+                "PointsDenominator",
+                "WeightedDenominator",
+                "WeightedNumerator",
+                "DisplayedGrade",
+                "GradeObjectIdentifier",
+                "GradeObjectName",
+                "GradeObjectType",
+                "GradeObjectTypeName",
+                "Comments",
+                "PrivateComments"
+            ],
+            "properties": {
+                "OrgUnitId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "UserId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "PointsNumerator": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "PointsDenominator": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "WeightedDenominator": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "WeightedNumerator": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "GradeObjectIdentifier": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "GradeObjectName": {
+                    "type": "string",
+                    "enum": [
+                        "Final Adjusted Grade",
+                        "Final Calculated Grade"
+                    ]
+                },
+                "GradeObjectType": {
+                    "type": "number",
+                    "enum": [
+                        7,
+                        8
+                    ]
+                },
+                "GradeObjectTypeName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "DisplayedGrade": {
+                    "type": "string"
+                },
+                "Comments": {
+                    "$ref": "#/definitions/RichText"
+                },
+                "PrivateComments": {
+                    "$ref": "#/definitions/RichText"
+                }
+            }
+        },
+        "RichText": {
+            "type": "object",
+            "required": [
+                "Text",
+                "Html"
+            ],
+            "properties": {
+                "Text": {
+                    "type": "string"
+                },
+                "Html": {
+                    "type": "string"
+                }
+            }
+        },
+        "ErrorResponseSchema": {
+            "type": "object",
+            "required": [
+                "type",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "type": {
+                    "description": "A URI that uniquely identifies the error type.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "A short human-readable description of the error.",
+                    "type": "number",
+                    "enum": [
+                        400
+                    ]
+                },
+                "title": {
+                    "description": "A number that matches the HTTP status code of the response.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
