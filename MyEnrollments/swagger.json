@@ -1,0 +1,274 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Enrollment API",
+        "description": "The following data block is updated:\n\n**Enrollment.OrgUnitInfo**\n```\n  {\n    \"Id\": <number:D2LID>,\n    \"Type\": { <composite:OrgUnit.OrgUnitTypeInfo> },\n    \"Name\": <string>,\n    \"Code\": <string>,\n    \"HomeUrl\": <string>,  // New field\n    \"ImageUrl\": <string>  // New field\n  }\n```\n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/lp/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json"
+    ],
+    "paths": {
+        "/enrollments/myenrollments/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieve the list of all enrollments for the current user.",
+                "description": "Retrieve the list of all enrollments for the current user.\n\n**Return.** This action returns a `PagedResultSet` containing the resulting `MyOrgUnitInfo` data blocks for the segment following your *bookmark* parameter (or the first segment if the parameter is empty or missing). If the request included *sortBy*, the same *sortBy* parameters must be specified with the *bookmark* parameter when fetching the next page.\n\n**Enrollment.MyOrgUnitInfo**\n\n```\n {\n   \"OrgUnit\": {\n     \"Id\": <number:D2LID>,\n     \"Type\": {\n       \"Id\": <number:D2LID>,\n       \"Code\": <string>,\n       \"Name\": <string\n     },\n     \"Name\": <string>,\n     \"Code\": <string>,\n     \"HomeUrl\": <string>,\n     \"ImageUrl\": <string>\n   }\n   \"Access\": {\n     \"IsActive\": <boolean>,\n     \"StartDate\": <string:UTCDateTime>|null,\n     \"EndDate\": <string:UTCDateTime>|null,\n     \"CanAccess\": <boolean>,\n     \"ClasslistRoleName\": <string>|null, // Added with LE v1.8 API\n     \"LISRoles\": [ <string>, ... ] // Added with LE v1.8 API\n   }\n }\n```\n\n**NOTE:** The **startDateTime** and **endDateTime** parameters act as an overlap filter; i.e. only org units that have a date range overlapping with the specified time range are included.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitTypeId",
+                        "in": "query",
+                        "description": "Optional. Filter list to specific org unit types.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "Sort by key-expression.\n\nIf you do no provide a *sortBy* query parameter, this action defaults to ascending sort by *OrgUnitId*; you can also ask for an ascending sort by *OrgUnitTypeId*, *OrgUnitName*, *StartDate*, *EndDate*, or *FavoritedAt*. If you preface the sort key name with a minus sign, the action preforms a descending sort (so *?sortBy=-OrgUnitTypeId* requests a list sorted in descending order by *OrgUnitTypeId*). The *sortBy* query parameter may be specified multiple times, and the sort is applied in the order the sort keys are specified (so *?sortBy=OrgUnitTypeId&sortBy=-OrgUnitId* requests a list sorted first by *OrgUnitTypeId* in ascending order and second by *OrgUnitId* in descending order).\n",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    },
+                    {
+                        "name": "canAccess",
+                        "in": "query",
+                        "description": "Filters to org units that the user can access (ie. filters out the ones that the user can only *see* but cannot access)",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/MyOrgUnitInfoPagedResultSet"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"PagingInfo\": {\n    \"Bookmark\": \"121868\",\n    \"HasMoreItems\": false\n  },\n  \"Items\": [\n    {\n      \"OrgUnit\": {\n        \"Id\": 6609,\n        \"Type\": {\n          \"Id\": 3,\n          \"Code\": \"Course Offering\",\n          \"Name\": \"Course Offering\"\n        },\n        \"Name\": \"Course\",\n        \"Code\": \"C1\"\n        \"HomeUrl\": \"http://instance/HomeUrl\"\n        \"ImageUrl\": \"http://instance/ImageUrl\"\n      },\n      \"Access\": {\n        \"IsActive\": true,\n        \"StartDate\": null,\n        \"EndDate\": null,\n        \"CanAccess\": true,\n        \"ClasslistRoleName\": \"End User\",\n        \"LISRoles\": [\n          \"urn:lti:instrole:ims/lis/Student\",\n          \"urn:lti:instrole:ims/lis/Learner\"\n        ]\n      }\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Invalid *sortBy* key-expression, *orgUnitTypeId*, *startDateTime*, *endDateTime*, or *canAccess* specified.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No current user context."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "MyOrgUnitInfoPagedResultSet": {
+            "description": "Paged result set containing the resulting MyOrgUnitInfo JSON data blocks for the segments following your bookmark parameter (or the first segment if that parameter is empty or missing)\n",
+            "type": "object",
+            "required": [
+                "PagingInfo",
+                "Items"
+            ],
+            "properties": {
+                "PagingInfo": {
+                    "type": "object",
+                    "required": [
+                        "Bookmark",
+                        "HasMoreItems"
+                    ],
+                    "properties": {
+                        "Bookmark": {
+                            "type": "string"
+                        },
+                        "HasMoreItems": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "Items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MyOrgUnitInfo"
+                    }
+                }
+            }
+        },
+        "MyOrgUnitInfo": {
+            "type": "object",
+            "required": [
+                "OrgUnit",
+                "Access"
+            ],
+            "properties": {
+                "OrgUnit": {
+                    "$ref": "#/definitions/OrgUnitInfo"
+                },
+                "Access": {
+                    "type": "object",
+                    "required": [
+                        "IsActive",
+                        "StartDate",
+                        "EndDate",
+                        "CanAccess",
+                        "ClasslistRoleName",
+                        "LISRoles"
+                    ],
+                    "properties": {
+                        "IsActive": {
+                            "type": "boolean"
+                        },
+                        "StartDate": {
+                            "description": "UTCDateTime | Start date for org unit.\n",
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        },
+                        "EndDate": {
+                            "description": "UTCDateTime | End date for org unit\n",
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        },
+                        "CanAccess": {
+                            "type": "boolean"
+                        },
+                        "ClasslistRoleName": {
+                            "description": "If present, presents the name of the D2L enrollment role as its configured to appear in the classlist.",
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "LISRoles": {
+                            "description": "If present, provides the list of standard IMS LIS roles that are configured for the D2L enrollment role to get sent to an LTI Tool Provider on an LTI Launch.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "OrgUnitInfo": {
+            "type": "object",
+            "required": [
+                "Id",
+                "Type",
+                "Name",
+                "Code",
+                "HomeUrl",
+                "ImageUrl"
+            ],
+            "properties": {
+                "Id": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "Type": {
+                    "$ref": "#/definitions/OrgUnitTypeInfo"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Code": {
+                    "type": "string"
+                },
+                "HomeUrl": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "ImageUrl": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            }
+        },
+        "OrgUnitTypeInfo": {
+            "type": "object",
+            "required": [
+                "Id",
+                "Code",
+                "Name"
+            ],
+            "properties": {
+                "Id": {
+                    "description": "number:D2LID",
+                    "type": "number"
+                },
+                "Code": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
