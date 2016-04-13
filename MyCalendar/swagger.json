@@ -68,11 +68,8 @@
                         "in": "query",
                         "description": "List of org unit IDs.",
                         "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "collectionFormat": "csv"
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
                     },
                     {
                         "name": "startDateTime",
@@ -330,11 +327,8 @@
                         "in": "query",
                         "description": "List of org unit IDs.",
                         "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "collectionFormat": "csv"
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
                     },
                     {
                         "name": "startDateTime",
