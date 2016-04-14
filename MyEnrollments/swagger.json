@@ -65,7 +65,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": false,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "endDateTime",
@@ -73,7 +73,7 @@
                         "description": "**UTCDateTime** End of time window to examine.\n",
                         "required": false,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "canAccess",
@@ -185,7 +185,7 @@
                                 "string",
                                 "null"
                             ],
-                            "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                         },
                         "EndDate": {
                             "description": "UTCDateTime | End date for org unit\n",
@@ -193,7 +193,7 @@
                                 "string",
                                 "null"
                             ],
-                            "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                         },
                         "CanAccess": {
                             "type": "boolean"
@@ -238,7 +238,10 @@
                     "type": "string"
                 },
                 "Code": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "HomeUrl": {
                     "type": "string",
