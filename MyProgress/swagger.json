@@ -1,0 +1,206 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "My Progress API",
+        "description": "#### This API will be responsible for retrieving information about progress/completion of course content.\n\n#### To facilitate retrieving progress/completion information at different content levels, we introduce an enum to specify the content level:\n  \n**CONTENTPROGRESSLEVEL_T**\n```\n  Course  1\n  Module  2\n  Topic   3\n```\n\n#### The following JSON data block is introduced:\n\n**ContentProgress.Completion**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ObjectId\": <number:D2LID>,\n    \"RequiredItems\": <number>,\n    \"CompletedItems\": <number>\n  }\n```    \n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/le/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json",
+        "application/json; charset=UTF-8",
+        "application/problem+json; charset=UTF-8"
+    ],
+    "paths": {
+        "/{orgUnitId}/content/progress/count/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the count of completed and required content items for the calling user within all the org units they are actively enrolled in.",
+                "description": "Retrieves the count of completed and required content items for the calling user within all the org units they are actively enrolled in.\n\n**Return.** An `ObjectListPage` of `ContentProgress.Completion` blocks. \n* If **level** is “Course”, then the list contains a single completion block containing completion info at the course level. \n* If the **level** is “Module”, then the list contains the completion info for the top-most modules in the course. \n* If **level** is “Topic”, then the list contains the completion info for individual required topics in the course.\n\n**ContentProgress.Completion**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ObjectId\": <number:D2LID>,\n    \"RequiredItems\": <number>,\n    \"CompletedItems\": <number>\n  }\n```\n\n**Notes:**\n1.\tCompletion information should be included only for items visible to the user.\n2.\tFor course level completion, the “ObjectId” field should be “0”.\n3.\tFor module level completion, the “ObjectId” is the module content object ID.\n4.\tFor topic level completion, “RequiredItems” should always be “1” (since this route returns progress for required items only). “CompletedItems” should be “1” if the topic is completed; otherwise “0”.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID.",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "description": "Content level for which to retrieve progress data.",
+                        "required": true,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ContentProgressCompletionObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/6609/content/progress/count/?level=2&bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ObjectId\": \"12345\",\n      \"RequiredItems\": 1,\n      \"CompletedItems\": 0\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided *level* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. User has no permission to access specified org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Specified org unit does not exist."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ContentProgressCompletionObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ContentProgressCompletion"
+                    }
+                }
+            }
+        },
+        "ContentProgressCompletion": {
+            "type": "object",
+            "required": [
+                "OrgUnitId",
+                "UserId",
+                "ObjectId",
+                "RequiredItems",
+                "CompletedItems"
+            ],
+            "properties": {
+                "OrgUnitId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "UserId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "ObjectId": {
+                    "description": "number:D2LID",
+                    "type": "string"
+                },
+                "RequiredItems": {
+                    "type": "number"
+                },
+                "CompletedItems": {
+                    "type": "number"
+                }
+            }
+        },
+        "ErrorResponseSchema": {
+            "type": "object",
+            "required": [
+                "type",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "type": {
+                    "description": "A URI that uniquely identifies the error type.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "A short human-readable description of the error.",
+                    "type": "number",
+                    "enum": [
+                        400,
+                        403
+                    ]
+                },
+                "title": {
+                    "description": "A number that matches the HTTP status code of the response.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
