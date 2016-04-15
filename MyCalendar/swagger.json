@@ -34,7 +34,7 @@
                         "description": "Authorization token",
                         "required": true,
                         "type": "string",
-                        "pattern": "^Bearer"
+                        "pattern": "^Bearer "
                     },
                     {
                         "name": "association",
@@ -69,7 +69,7 @@
                         "description": "List of org unit IDs.",
                         "required": true,
                         "type": "string",
-                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
                     },
                     {
                         "name": "startDateTime",
@@ -77,7 +77,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "endDateTime",
@@ -85,7 +85,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "bookmark",
@@ -148,7 +148,7 @@
                         "description": "Authorization token",
                         "required": true,
                         "type": "string",
-                        "pattern": "^Bearer"
+                        "pattern": "^Bearer "
                     },
                     {
                         "name": "orgUnitId",
@@ -190,7 +190,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "endDateTime",
@@ -198,7 +198,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "bookmark",
@@ -261,20 +261,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Specified org unit does not exist.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
+                        "description": "Not found. Specified org unit does not exist."
                     }
                 }
             }
@@ -293,7 +280,7 @@
                         "description": "Authorization token",
                         "required": true,
                         "type": "string",
-                        "pattern": "^Bearer"
+                        "pattern": "^Bearer "
                     },
                     {
                         "name": "association",
@@ -328,7 +315,7 @@
                         "description": "List of org unit IDs.",
                         "required": true,
                         "type": "string",
-                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
                     },
                     {
                         "name": "startDateTime",
@@ -336,7 +323,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "endDateTime",
@@ -344,7 +331,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "bookmark",
@@ -407,7 +394,7 @@
                         "description": "Authorization token",
                         "required": true,
                         "type": "string",
-                        "pattern": "^Bearer"
+                        "pattern": "^Bearer "
                     },
                     {
                         "name": "orgUnitId",
@@ -449,7 +436,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "endDateTime",
@@ -457,7 +444,7 @@
                         "description": "**UTCDateTime** Start of time window to examine.\n",
                         "required": true,
                         "type": "string",
-                        "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                     },
                     {
                         "name": "bookmark",
@@ -520,20 +507,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Specified org unit does not exist.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
+                        "description": "Not found. Specified org unit does not exist."
                     }
                 }
             }
@@ -608,7 +582,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                 },
                 "EndDateTime": {
                     "description": "UTCDateTime",
@@ -616,7 +590,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                 },
                 "IsAllDayEvent": {
                     "type": "boolean"
@@ -627,7 +601,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}$"
                 },
                 "EndDay": {
                     "description": "LocalDateTime",
@@ -635,7 +609,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}$"
                 },
                 "GroupId": {
                     "description": "number:D2LID",
@@ -746,7 +720,7 @@
                 "RepeatUntilDate": {
                     "description": "UTCDateTime | A date and time after which this event will no longer recur.",
                     "type": "string",
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                 }
             }
         },
@@ -822,7 +796,8 @@
                     "enum": [
                         1,
                         2,
-                        3
+                        3,
+                        null
                     ]
                 },
                 "StartDate": {
@@ -831,7 +806,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                 },
                 "EndDate": {
                     "description": "UTCDateTime\nUsed by HiddenStarting and VisibleBetween restriction types; this value gets ignored in HiddenUntil, Visible, and Hidden types.\n",
@@ -839,7 +814,7 @@
                         "string",
                         "null"
                     ],
-                    "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z"
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
                 }
             }
         },
@@ -904,8 +879,7 @@
                     "type": "number",
                     "enum": [
                         400,
-                        403,
-                        404
+                        403
                     ]
                 },
                 "title": {
