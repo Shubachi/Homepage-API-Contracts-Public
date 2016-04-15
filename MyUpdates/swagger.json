@@ -42,7 +42,7 @@
                         "description": "Restricts the result to the specified org unit IDs.",
                         "required": true,
                         "type": "string",
-                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
                     },
                     {
                         "name": "bookmark",
@@ -152,20 +152,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not found. Specified org unit does not exist.",
-                        "headers": {
-                            "content-type": {
-                                "type": "string",
-                                "description": "The MIME type of this content.",
-                                "enum": [
-                                    "application/problem+json",
-                                    "application/problem+json; charset=UTF-8"
-                                ]
-                            }
-                        },
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponseSchema"
-                        }
+                        "description": "Not found. Specified org unit does not exist."
                     }
                 }
             }
@@ -254,8 +241,7 @@
                     "type": "number",
                     "enum": [
                         400,
-                        403,
-                        404
+                        403
                     ]
                 },
                 "title": {
