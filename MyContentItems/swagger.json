@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "My Content Items API",
-        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\nContent.**MyContentItem**\n```\n  { \n    \"UserId\": <number:D2LID>,\n    \"OrgUnitId\": <number:D2LID>, \n    \"ItemId\": <number:D2LID>, \n    \"ItemName\": <string>, \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\nContent.**ItemCount**\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"ItemCount\": <number>\n  }\n```\n",
+        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\nContent.**MyContentItem**\n```\n  { \n    \"UserId\": <string:D2LId>,\n    \"OrgUnitId\": <string:D2LId>, \n    \"ItemId\": <string:D2LId>, \n    \"ItemName\": <string>, \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\nContent.**ItemCount**\n```\n  {\n    \"OrgUnitId\": <string:D2LId>,\n    \"UserId\": <string:D2LId>,\n    \"ItemCount\": <number>\n  }\n```\n",
         "version": "unstable",
         "x-additional-swagger": [
             "Valence Framework API"
@@ -141,7 +141,7 @@
                         "in": "path",
                         "description": "Org unit ID",
                         "required": true,
-                        "type": "number"
+                        "type": "string"
                     },
                     {
                         "name": "completion",
@@ -359,7 +359,7 @@
                         "in": "path",
                         "description": "Org unit ID",
                         "required": true,
-                        "type": "number"
+                        "type": "string"
                     },
                     {
                         "name": "completion",
@@ -570,7 +570,7 @@
                         "in": "path",
                         "description": "Org unit ID",
                         "required": true,
-                        "type": "number"
+                        "type": "string"
                     },
                     {
                         "name": "completion",
@@ -788,7 +788,7 @@
                         "in": "path",
                         "description": "Org unit ID",
                         "required": true,
-                        "type": "number"
+                        "type": "string"
                     },
                     {
                         "name": "completion",
@@ -919,15 +919,15 @@
             ],
             "properties": {
                 "UserId": {
-                    "description": "number:D2LId",
+                    "description": "string:D2LId",
                     "type": "string"
                 },
                 "OrgUnitId": {
-                    "description": "number:D2LId",
+                    "description": "string:D2LId",
                     "type": "string"
                 },
                 "ItemId": {
-                    "description": "number:D2LId",
+                    "description": "string:D2LId",
                     "type": "string"
                 },
                 "ItemName": {
@@ -1006,11 +1006,11 @@
             ],
             "properties": {
                 "OrgUnitId": {
-                    "description": "number:D2LID",
+                    "description": "string:D2LId",
                     "type": "string"
                 },
                 "UserId": {
-                    "description": "number:D2LID",
+                    "description": "string:D2LId",
                     "type": "string"
                 },
                 "ItemCount": {
