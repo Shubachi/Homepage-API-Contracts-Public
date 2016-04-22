@@ -1,0 +1,1048 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "My Content Items API",
+        "description": "##### To allow filtering content items based on their completion status, we’ll introduce a new enum type for specifying the completion status:\n\n**COMPLETION_T**\n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\n\n##### We'll also introduce the following JSON data blocks:\n\nContent.**MyContentItem**\n```\n  { \n    \"UserId\": <string:D2LId>,\n    \"OrgUnitId\": <string:D2LId>, \n    \"ItemId\": <string:D2LId>, \n    \"ItemName\": <string>, \n    \"ItemUrl\": <string>,\n    \"StartDate\": <string:UTCDateTime>|null, \n    \"EndDate\": <string:UTCDateTime>|null, \n    \"DueDate\": <string:UTCDateTime>|null, \n    \"DateCompleted\": <string:UTCDateTime>|null \n  }\n```\n\nContent.**ItemCount**\n```\n  {\n    \"OrgUnitId\": <string:D2LId>,\n    \"UserId\": <string:D2LId>,\n    \"ItemCount\": <number>\n  }\n```\n",
+        "version": "unstable",
+        "x-additional-swagger": [
+            "Valence Framework API"
+        ]
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/d2l/api/le/{version}",
+    "produces": [
+        "application/json",
+        "application/problem+json",
+        "application/json; charset=UTF-8",
+        "application/problem+json; charset=UTF-8"
+    ],
+    "paths": {
+        "/content/myItems/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves all content items with either a start, end, or due date, for all the org units that the calling user is actively enrolled in.",
+                "description": "Retrieves all content items with either a start, end, or due date, for all the org units that the calling user is actively enrolled in.\n\n**Return.** An `ObjectListPage` JSON block containing a list of `MyContentItem` JSON data blocks, sorted by the earliest of StartDate, EndDate, or DueDate that falls within the date range specified.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of org unit IDs.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/MyContentItemObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/content/myItems/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves all content items with either a start, end, or due date, for the provided org unit context.",
+                "description": "Retrieves all content items with either a start, end, or due date, for the provided org unit context.\n\n**Return.** An `ObjectListPage` JSON block containing a list of `MyContentItem` JSON data blocks, sorted by the earliest of StartDate, EndDate, or DueDate that falls within the date range specified.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/MyContentItemObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/6609/content/myItems/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"StartDate\": \"2006-01-01T16:30:00.000Z\"\n      \"EndDate\": \"2006-01-15T16:30:00.000Z\"\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-01-08T16:30:00.000Z\"\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Specified org unit does not exist."
+                    }
+                }
+            }
+        },
+        "/content/myItems/itemCounts/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the count of content items with either a start, end, or due date, for each of the org units that the calling user is actively enrolled in.",
+                "description": "Retrieves the count of content items with either a start, end, or due date, for each of the org units that the calling user is actively enrolled in.\n\n**Return.** A `ObjectListPage` JSON block of `ItemCount` blocks, each representing the content item count for one org unit.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of org unit IDs.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ItemCountObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/itemCounts/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/content/myItems/itemCount": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the count of content items with either a start, end, or due date, for the provided org unit context.",
+                "description": "Retrieves the count of content items with either a start, end, or due date, for the provided org unit context.\n\n**Return.** A single `ItemCount` block.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ItemCount"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"OrgUnitId\": \"6609\",\n  \"UserId\": \"10183\",\n  \"ItemCount\": 3\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Specified org unit does not exist."
+                    }
+                }
+            }
+        },
+        "/content/myItems/due/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves all items with due date for the calling user, with all the org units they are actively enrolled in.",
+                "description": "Retrieves all items with due date for the calling user, with all the org units they are actively enrolled in.\n\n**Return.** An `ObjectListPage` JSON block containing a list of `MyContentItem` JSON data blocks (new structure), sorted by **DueDate** ascending.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of org unit IDs.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*$"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/MyContentItemObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/myItems/due/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/content/myItems/due/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves all items with due date for the calling user, within the provided org unit context.",
+                "description": "Retrieves all items with due date for the calling user, within the provided org unit context.\n      \n**Return.** An `ObjectListPage` JSON block containing a list of `MyContentItem` JSON data blocks (new structure), sorted by **DueDate** ascending.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/MyContentItemObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/apie/le/unstable/6609/myItems/due/?bookmark=index\",\n  \"Objects\": [\n    {\n      \"UserId\": \"10183\",\n      \"OrgUnitId\": \"6609\",\n      \"ItemId\": \"10001\",\n      \"ItemName\": \"Name of item\",\n      \"ItemUrl\" \"http://item.url/items/3\",\n      \"DueDate\": \"2006-01-10T16:30:00.000Z\"\n      \"DateCompleted\": \"2016-03-10T16:30:00.000Z\"\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Specified org unit does not exist."
+                    }
+                }
+            }
+        },
+        "/content/myItems/due/itemCounts/": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the count of content items with a due date, for each of the org units that the calling user is actively enrolled in.",
+                "description": "Retrieves the count of content items with a due date, for each of the org units that the calling user is actively enrolled in.\n\n**Return.** An `ObjectListPage` JSON block of `ItemCount` blocks, each representing the content item count for one org unit.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "orgUnitIdsCSV",
+                        "in": "query",
+                        "description": "List of Org unit IDs.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[1-9][0-9]*(,[1-9][0-9]*)*"
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "bookmark",
+                        "in": "query",
+                        "description": "Bookmark to use for fetching the next data set segment.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ItemCountObjectListPage"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"Next\": \"http://instance/d2l/api/le/unstable/content/myItems/itemCounts/due/?orgUnitIdsCSV=6609&bookmark=index\",\n  \"Objects\": [\n    {\n      \"OrgUnitId\": \"6609\",\n      \"UserId\": \"10183\",\n      \"ItemCount\": 3\n    }\n  ]\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *orgUnitIdsCSV* or *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/{orgUnitId}/content/myItems/due/itemCount": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Retrieves the count of content items with a due date, for the provided org unit context.",
+                "description": "Retrieves the count of content items with a due date, for the provided org unit context.\n\n**Return.** A single `ItemCount` block.\n",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^Bearer "
+                    },
+                    {
+                        "name": "orgUnitId",
+                        "in": "path",
+                        "description": "Org unit ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "completion",
+                        "in": "query",
+                        "description": "**COMPLETION_T** \n```\n  Any               1 \n  CompletedOnly     2 \n  NotCompletedOnly  3\n```\nIf not specified, default to Any.\n",
+                        "required": false,
+                        "default": 1,
+                        "type": "number",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** Start of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    },
+                    {
+                        "name": "endDateTime",
+                        "in": "query",
+                        "description": "**UTCDateTime** End of time window to examine.\n",
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Action succeeded.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/json",
+                                    "application/json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ItemCount"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"OrgUnitId\": \"6609\",\n  \"UserId\": \"10183\",\n  \"ItemCount\": 3\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Provided start date occurs after end date, or provided *completion* is invalid.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. No permission to access specified org unit.",
+                        "headers": {
+                            "content-type": {
+                                "type": "string",
+                                "description": "The MIME type of this content.",
+                                "enum": [
+                                    "application/problem+json",
+                                    "application/problem+json; charset=UTF-8"
+                                ]
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponseSchema"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. Specified org unit does not exist."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "MyContentItemObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MyContentItem"
+                    }
+                }
+            }
+        },
+        "MyContentItem": {
+            "description": "A content item describes an activity in an org unit that was added to the content tool.",
+            "type": "object",
+            "required": [
+                "UserId",
+                "OrgUnitId",
+                "ItemId",
+                "ItemName",
+                "ItemUrl",
+                "StartDate",
+                "EndDate",
+                "DueDate",
+                "DateCompleted"
+            ],
+            "properties": {
+                "UserId": {
+                    "description": "string:D2LId",
+                    "type": "string"
+                },
+                "OrgUnitId": {
+                    "description": "string:D2LId",
+                    "type": "string"
+                },
+                "ItemId": {
+                    "description": "string:D2LId",
+                    "type": "string"
+                },
+                "ItemName": {
+                    "description": "Name of the content topic",
+                    "type": "string"
+                },
+                "ItemUrl": {
+                    "description": "URL to content item",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "StartDate": {
+                    "description": "UTCDateTime | null\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                },
+                "EndDate": {
+                    "description": "UTCDateTime | null\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                },
+                "DueDate": {
+                    "description": "UTCDateTime | null\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                },
+                "DateCompleted": {
+                    "description": "UTCDateTime | null\n",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$"
+                }
+            }
+        },
+        "ItemCountObjectListPage": {
+            "type": "object",
+            "required": [
+                "Next",
+                "Objects"
+            ],
+            "properties": {
+                "Next": {
+                    "description": "If more objects exist beyond this current page of results, then this property is not null and will contain an URL to fetch the next page of records.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                },
+                "Objects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ItemCount"
+                    }
+                }
+            }
+        },
+        "ItemCount": {
+            "description": "An item count describes the number of activities in an org unit that was added to the content tool with either a start date, end date, or due date.",
+            "type": "object",
+            "required": [
+                "OrgUnitId",
+                "UserId",
+                "ItemCount"
+            ],
+            "properties": {
+                "OrgUnitId": {
+                    "description": "string:D2LId",
+                    "type": "string"
+                },
+                "UserId": {
+                    "description": "string:D2LId",
+                    "type": "string"
+                },
+                "ItemCount": {
+                    "type": "number"
+                }
+            }
+        },
+        "ErrorResponseSchema": {
+            "type": "object",
+            "required": [
+                "type",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "type": {
+                    "description": "A URI that uniquely identifies the error type.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "A short human-readable description of the error.",
+                    "type": "number",
+                    "enum": [
+                        400,
+                        403
+                    ]
+                },
+                "title": {
+                    "description": "A number that matches the HTTP status code of the response.",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
