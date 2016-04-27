@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "Calendar API",
-        "description": "##### To allow filtering calendar events to unassociated items only, we’ll introduce a new enum type for specifying the association type:\n\n**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n\n##### To allow filtering calendar events to reminder items only, we’ll introduce a new enum type for specifying the event type:\n\n**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n\n##### The following JSON data block is introduced:\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+        "description": "##### To allow filtering calendar events to unassociated items only, we’ll introduce a new enum type for specifying the association type:\n\n**ASSOCIATION_T**\n```\n  Any               1\n  AssociatedOnly    2\n  UnassociatedOnly  3\n```\n\n##### To allow filtering calendar events to reminder items only, we’ll introduce a new enum type for specifying the event type:\n\n**EVENTTYPE_T**\n```\n  Reminder  1\n  Start     2\n  End       3\n  Due       6\n```\n\n##### The following JSON data block is introduced:\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <string:D2LID>,\n    \"UserId\": <string:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
         "version": "unstable",
         "x-additional-swagger": [
             "Valence Framework API"
@@ -272,7 +272,7 @@
                     "GET"
                 ],
                 "summary": "Retrieve the count of all calendar events for the calling user, within all the org units they are actively enrolled in.",
-                "description": "Retrieve the count of all calendar events for the calling user, within all the org units they are actively enrolled in.\n\n**Return.** A `ObjectListPage` of `Calendar.EventCount` blocks, each representing the event count for one org unit.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+                "description": "Retrieve the count of all calendar events for the calling user, within all the org units they are actively enrolled in.\n\n**Return.** A `ObjectListPage` of `Calendar.EventCount` blocks, each representing the event count for one org unit.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <string:D2LID>,\n    \"UserId\": <string:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
                 "parameters": [
                     {
                         "name": "authorization",
@@ -386,7 +386,7 @@
                     "GET"
                 ],
                 "summary": "Retrieve all the calendar events for the calling user, within the provided org unit context.",
-                "description": "Retrieve all the calendar events for the calling user, within the provided org unit context.\n\n**Return.** A single `Calendar.EventCount` block.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <number:D2LID>,\n    \"UserId\": <number:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
+                "description": "Retrieve all the calendar events for the calling user, within the provided org unit context.\n\n**Return.** A single `Calendar.EventCount` block.\n\nCalendar.**EventCount**\n\n```\n  {\n    \"OrgUnitId\": <string:D2LID>,\n    \"UserId\": <string:D2LID>,\n    \"EventCount\": <number>\n  }\n```\n",
                 "parameters": [
                     {
                         "name": "authorization",
@@ -850,11 +850,11 @@
             ],
             "properties": {
                 "OrgUnitId": {
-                    "description": "number:D2LID",
+                    "description": "string:D2LID",
                     "type": "string"
                 },
                 "UserId": {
-                    "description": "number:D2LID",
+                    "description": "string:D2LID",
                     "type": "string"
                 },
                 "EventCount": {
